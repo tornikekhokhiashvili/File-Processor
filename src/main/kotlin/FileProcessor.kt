@@ -3,7 +3,6 @@ import filter.LineLengthFilter
 import io.FileReader
 import mapper.CharCountMapper
 import mapper.Mapper
-import operator.SumTerminateOperator
 import operator.SumTerminateOperatorForBoolean
 import operator.TerminateOperator
 import transformer.SequenceTransformer
