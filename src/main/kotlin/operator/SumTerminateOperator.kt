@@ -9,7 +9,7 @@ class SumTerminateOperator : TerminateOperator<Int,Int> {
      * @param param input sequence to terminate
      * @return sum of each sequence item
      */
-    override fun terminate(param: Sequence<Int>): Int {
+    override fun terminate(param: Sequence<Number>): Int {
         return param.sum()
     }
 }

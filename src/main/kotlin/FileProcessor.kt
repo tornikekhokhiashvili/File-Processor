@@ -2,6 +2,7 @@ import filter.Filter
 import filter.LineLengthFilter
 import io.FileReader
 import mapper.CharCountMapper
+import mapper.Mapper
 import operator.SumTerminateOperator
 import transformer.SequenceTransformer
 import transformer.TakeNSequenceTransformer
@@ -27,18 +28,18 @@ class FileProcessor(private val fileReader: FileReader) {
      * @param terminateOperator any terminate operator that input type match with transformer output type.
      * @return result of terminated operator.
      */
-    fun <T,R : Any> process(
+    fun process(
         file: File,
         filter: Filter<String>,
-        mapper: CharCountMapper<String,T>,
-        transformer: SequenceTransformer<T,R>,
-        terminateOperator: SumTerminateOperator<R,Any>
-    ):Any{
+        mapper: Mapper<String, Int>,
+        transformer: SequenceTransformer<Int, Number>,
+        terminateOperator: SumTerminateOperator
+    ): Int {
         val fileLines = fileReader.read(file)
         val filteredLines = fileLines.filter { line -> filter.filter(line) }
         val mappedLines = filteredLines.map { line -> mapper.map(line) }
         val transformedSequence = transformer.transform(mappedLines)
-        return terminateOperator.terminate(transformedSequence)
+        return terminateOperator.terminate(transformedSequence )
     }
 }
 
@@ -56,7 +57,7 @@ fun main() {
         mapper = CharCountMapper(),
         transformer = TakeNSequenceTransformer(5),
         terminateOperator = SumTerminateOperator()
-    ) as Int
+    )
     println(result) // With no changes in test file result should be equal to 6
 }
 

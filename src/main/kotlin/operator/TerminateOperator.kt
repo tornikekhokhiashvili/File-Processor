@@ -6,5 +6,5 @@ interface TerminateOperator<in P, out R> {
      * @param param input sequence to terminate
      * @return value of terminated operation
      */
-    fun terminate(param: Sequence<P>): R
+    fun terminate(param: Sequence<Number>): R
 }
