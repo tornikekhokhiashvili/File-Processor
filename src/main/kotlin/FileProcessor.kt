@@ -2,10 +2,8 @@ import filter.Filter
 import filter.LineLengthFilter
 import io.FileReader
 import mapper.CharCountMapper
-import mapper.Mapper
 import operator.SumTerminateOperator
 import transformer.SequenceTransformer
-import operator.TerminateOperator
 import transformer.TakeNSequenceTransformer
 import java.io.File
 
@@ -29,20 +27,26 @@ class FileProcessor(private val fileReader: FileReader) {
      * @param terminateOperator any terminate operator that input type match with transformer output type.
      * @return result of terminated operator.
      */
-    fun process(
+    fun <T,R : Any> process(
         file: File,
-        filter: Filter,
-        mapper: Mapper,
-        transformer: SequenceTransformer,
-        terminateOperator: TerminateOperator
-    ) = TODO()
+        filter: Filter<String>,
+        mapper: CharCountMapper<String,T>,
+        transformer: SequenceTransformer<T,R>,
+        terminateOperator: SumTerminateOperator<R,Any>
+    ):Any{
+        val fileLines = fileReader.read(file)
+        val filteredLines = fileLines.filter { line -> filter.filter(line) }
+        val mappedLines = filteredLines.map { line -> mapper.map(line) }
+        val transformedSequence = transformer.transform(mappedLines)
+        return terminateOperator.terminate(transformedSequence)
+    }
 }
 
 /**
  * Uncomment main function to check entire pipeline.
  * In case everything is implemented correctly and there is no changes in test_file.txt '6' will be printed to console.
  */
-/*
+
 fun main() {
     val file = File("src/main/resources/test_file.txt")
     val processor = FileProcessor(FileReader())
@@ -52,7 +56,7 @@ fun main() {
         mapper = CharCountMapper(),
         transformer = TakeNSequenceTransformer(5),
         terminateOperator = SumTerminateOperator()
-    )
+    ) as Int
     println(result) // With no changes in test file result should be equal to 6
 }
-*/
+

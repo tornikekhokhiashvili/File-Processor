@@ -13,5 +13,12 @@ class FileReader {
      * @param file file that needs to be read line by line
      * @return sequence that consist of lines of file
      */
-    fun read(file: File): Sequence<String> = TODO()
+    fun read(file: File): Sequence<String> {
+        return sequence {
+            file.bufferedReader().useLines {
+                line->
+                line.forEach { yield(it) }
+            }
+        }
+    }
 }
