@@ -4,6 +4,8 @@ import io.FileReader
 import mapper.CharCountMapper
 import mapper.Mapper
 import operator.SumTerminateOperator
+import operator.SumTerminateOperatorForBoolean
+import operator.TerminateOperator
 import transformer.SequenceTransformer
 import transformer.TakeNSequenceTransformer
 import java.io.File
@@ -33,8 +35,8 @@ class FileProcessor(private val fileReader: FileReader) {
         filter: Filter<String>,
         mapper: Mapper<String, Int>,
         transformer: SequenceTransformer<Int, Number>,
-        terminateOperator: SumTerminateOperator
-    ): Int {
+        terminateOperator: TerminateOperator<Number, Boolean>
+    ): Boolean {
         val fileLines = fileReader.read(file)
         val filteredLines = fileLines.filter { line -> filter.filter(line) }
         val mappedLines = filteredLines.map { line -> mapper.map(line) }
@@ -51,12 +53,12 @@ class FileProcessor(private val fileReader: FileReader) {
 fun main() {
     val file = File("src/main/resources/test_file.txt")
     val processor = FileProcessor(FileReader())
-    val result: Int = processor.process(
+    val result: Boolean = processor.process(
         file = file,
         filter = LineLengthFilter(12),
         mapper = CharCountMapper(),
         transformer = TakeNSequenceTransformer(5),
-        terminateOperator = SumTerminateOperator()
+        terminateOperator = SumTerminateOperatorForBoolean()
     )
     println(result) // With no changes in test file result should be equal to 6
 }

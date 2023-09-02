@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
 class PrintlnTerminateOperatorTest {
-    private lateinit var operator: PrintlnTerminateOperator<String>
+    private lateinit var operator: PrintlnTerminateOperator
     private lateinit var outputStream: ByteArrayOutputStream
 
     @Before
