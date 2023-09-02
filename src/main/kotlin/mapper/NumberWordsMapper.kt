@@ -10,6 +10,9 @@ class NumberWordsMapper : Mapper<String,Int> {
      * @return count of words in the string with removed trailing spaces
      */
     override fun map(param:String ):Int {
+        if (param.trim().isEmpty()) {
+            return 0
+        }
         val word=param.trim().split(Regex( "\\s+"))
         return word.size
     }

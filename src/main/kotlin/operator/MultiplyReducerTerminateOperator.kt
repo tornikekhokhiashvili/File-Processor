@@ -11,6 +11,9 @@ class MultiplyReducerTerminateOperator : TerminateOperator<Int,Int> {
      * @return value that equal to consequent multiplication of each sequence item
      */
     override fun terminate(param: Sequence<Int>): Int {
+        if (param.toList().isEmpty()) {
+            return 0
+        }
         return param.fold(1) { acc, value -> acc * value.toInt() }
     }
 

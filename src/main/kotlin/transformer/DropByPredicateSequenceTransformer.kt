@@ -12,6 +12,6 @@ class DropByPredicateSequenceTransformer<T>(private val predicate:(T)->Boolean )
      * @return sequence with the same type as initial with dropped items by predicate until predicate returns false
      */
     override fun transform(source: Sequence<T>):Sequence<T>{
-        return source.dropWhile{!predicate(it)}
+        return source.dropWhile{predicate(it)}
     }
 }
