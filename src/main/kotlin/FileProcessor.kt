@@ -3,7 +3,7 @@ import filter.LineLengthFilter
 import io.FileReader
 import mapper.CharCountMapper
 import mapper.Mapper
-import operator.SumTerminateOperatorForBoolean
+import operator.SumTerminateOperator
 import operator.TerminateOperator
 import transformer.SequenceTransformer
 import transformer.TakeNSequenceTransformer
@@ -29,18 +29,18 @@ class FileProcessor(private val fileReader: FileReader) {
      * @param terminateOperator any terminate operator that input type match with transformer output type.
      * @return result of terminated operator.
      */
-    fun process(
+    fun<T,V,K> process(
         file: File,
         filter: Filter<String>,
-        mapper: Mapper<String, Int>,
-        transformer: SequenceTransformer<Int, Number>,
-        terminateOperator: TerminateOperator<Number, Boolean>
-    ): Boolean {
-        val fileLines = fileReader.read(file)
-        val filteredLines = fileLines.filter { line -> filter.filter(line) }
-        val mappedLines = filteredLines.map { line -> mapper.map(line) }
-        val transformedSequence = transformer.transform(mappedLines)
-        return terminateOperator.terminate(transformedSequence )
+        mapper: Mapper<String, T>,
+        transformer: SequenceTransformer<T, V>,
+        terminateOperator: TerminateOperator<V, K>
+    ): K {
+        return fileReader.read(file)
+            .filter(filter::filter)
+            .map(mapper::map)
+            .let(transformer::transform)
+            .let(terminateOperator::terminate)
     }
 }
 
@@ -52,12 +52,12 @@ class FileProcessor(private val fileReader: FileReader) {
 fun main() {
     val file = File("src/main/resources/test_file.txt")
     val processor = FileProcessor(FileReader())
-    val result: Boolean = processor.process(
+    val result: Int = processor.process(
         file = file,
         filter = LineLengthFilter(12),
         mapper = CharCountMapper(),
         transformer = TakeNSequenceTransformer(5),
-        terminateOperator = SumTerminateOperatorForBoolean()
+        terminateOperator = SumTerminateOperator()
     )
     println(result) // With no changes in test file result should be equal to 6
 }

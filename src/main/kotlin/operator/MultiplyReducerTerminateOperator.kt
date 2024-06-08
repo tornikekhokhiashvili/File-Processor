@@ -14,7 +14,7 @@ class MultiplyReducerTerminateOperator : TerminateOperator<Int,Int> {
         if (param.toList().isEmpty()) {
             return 0
         }
-        return param.fold(1) { acc, value -> acc * value.toInt() }
+        return param.fold(1) { acc, value -> acc * value }
     }
 
 }

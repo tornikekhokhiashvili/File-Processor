@@ -9,6 +9,6 @@ class SubstringFilter(private val substring: String) : Filter<String> {
      * @return true if param contains substring. Check should be case-sensitive
      */
     override fun filter(value: String): Boolean {
-        return value.contains(substring)
+        return value.contains(substring.toLowerCase())
     }
 }

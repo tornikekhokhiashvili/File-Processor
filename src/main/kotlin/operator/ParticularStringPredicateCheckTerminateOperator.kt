@@ -12,6 +12,6 @@ class ParticularStringPredicateCheckTerminateOperator(
      * @return true if sequence contains item equal to stringToCheck property false otherwise
      */
     override fun terminate(param: Sequence<String>): Boolean {
-        return param.any { it==stringToCheck }
+        return param.contains(stringToCheck)
     }
 }
